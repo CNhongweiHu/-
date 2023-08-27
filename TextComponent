@@ -1,0 +1,86 @@
+using System;
+namespace PropsDemo
+{
+    public struct Props
+    {
+        public int propId;
+        public string name;
+        public string describe;
+        public int[] jumpablePropId;
+        public string imageLink;
+        public bool propsRun;
+        public Props(int propId, string name, string describe, int[] jumpablePropId, string imageLink, bool propsRun)
+        {
+            this.propId = propId;
+            this.name = name + propId;
+            this.describe = describe + propId;
+            this.jumpablePropId = jumpablePropId;
+            this.imageLink = imageLink;
+            this.propsRun = propsRun;
+        }
+        public void Print()
+        {
+            Console.WriteLine("当前道具为" + propId + "." + "可选选项为" + jumpablePropId[0] + "和" + jumpablePropId[1]);
+        }
+    }
+
+    internal class PropsDemo
+    {
+        static int PropID(int[] jumpablePropId,int propID)
+        {
+            switch (int.Parse(Console.ReadKey(true).KeyChar.ToString()))//玩家选择选项1或者选项2
+            {
+                case 1:
+                    propID = jumpablePropId[0];
+                    break;
+                case 2:
+                    propID = jumpablePropId[1];
+                    break;
+                default:
+                    Console.WriteLine("无效选择框");
+                    break;
+            }
+            return propID;//返回选择后的ID值，跳转至其他的同样的组件
+        }
+        static void Main(string[] args)
+        {
+            //表或者组件配置以下要素，最终生成为一张表格
+            Props prop1 = new Props(1, "testProp", "测试用道具", new int[2] { 2, 3 }, "C:/unity/xxxx/xxximage.png", true);
+            Props prop2 = new Props(2, "testProp", "测试用道具", new int[2] { 3, 4 }, "C:/unity/xxxx/xxximage.png", true);
+            Props prop3 = new Props(3, "testProp", "测试用道具", new int[2] { 4, 1 }, "C:/unity/xxxx/xxximage.png", true);
+            Props prop4 = new Props(4, "testProp", "测试用道具", new int[2] { 1, 5 }, "C:/unity/xxxx/xxximage.png", false);//选择了末尾组件将导致组件结算结束
+            int propID = 1;//假设在场景中触发了porpID1
+            bool propRun = true;
+            while (propRun)
+            {
+                switch (propID)//根据编号跳转对应的道具
+                {
+                    case 1:
+                        prop1.Print();
+                        propRun = prop1.propsRun;
+                        propID = PropID(prop1.jumpablePropId, propID);
+                        break;
+                    case 2:
+                        prop2.Print();
+                        propRun = prop2.propsRun;
+                        propID = PropID(prop2.jumpablePropId, propID);
+                        break;
+                    case 3:
+                        prop3.Print();
+                        propRun = prop3.propsRun;
+                        propID = PropID(prop3.jumpablePropId, propID);
+                        break;
+                    case 4:
+                        prop4.Print();
+                        propRun = prop4.propsRun;
+                        propID = PropID(prop4.jumpablePropId, propID);
+                        break;
+                    default:
+                        propRun = false;
+                        Console.Write("道具链条完毕");
+                        break;
+                }
+            }
+        }
+    }
+}
